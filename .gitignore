@@ -1,4 +1,6 @@
 __pycache__
 env
+*.coverage
 *.sqlite3
-.vscode
+.vscode/
+*/htmlcov

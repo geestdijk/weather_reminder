@@ -1,11 +1,12 @@
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.db import models
-from django.contrib.auth.models import (AbstractBaseUser,
-                                        BaseUserManager,
-                                        PermissionsMixin)
 
 
 class UserManager(BaseUserManager):
-
     def create_user(self, email, password=None, **extra_fields):
         """Creates and saves a new user"""
         if not email:
@@ -29,6 +30,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""
+
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
@@ -36,26 +38,28 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
 
 
-# class City(models.Model):
-#     """City object"""
-#     name = models.CharField(max_length=255)
-#     forecast = models.JSONField(default=list)
-#     members = models.ManyToManyField(User, through='UserForecast')
+class City(models.Model):
+    """City object"""
 
-#     def __str__(self):
-#         return self.name
-    
+    name = models.CharField(max_length=255)
+    forecast = models.JSONField(default=list)
+    members = models.ManyToManyField(User, through="UserForecast")
 
-# class UserForecast(models.Model):
-#     """User Weather Forecast M2M object"""
-#     city = models.ForeignKey(City, related_name='cities', on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, related_name='users', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
-#     def __str__(self):
-#         return f'City: {self.city.name}, User:{self.user.id}'
 
-#     class Meta:
-#         unique_together = ('city', 'user')
+class UserForecast(models.Model):
+    """User Weather Forecast M2M object"""
+
+    city = models.ForeignKey(City, related_name="cities", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="users", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"City: {self.city.name}, User:{self.user.id}"
+
+    class Meta:
+        unique_together = ("city", "user")
