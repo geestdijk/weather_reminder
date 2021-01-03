@@ -2,49 +2,20 @@
 {% load static %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script type="text/javascript" src={% static "app/static/js/core/signup.js" %}></script>
-
-<!-- <script>
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    axios.defaults.xsrfCookieName = "csrftoken";
-
-createUser = function() {
-    const email = document.querySelector('#id_email').value;
-    const name = document.querySelector('#id_name').value;
-    const password = document.querySelector('#id_password1').value;
-    const password2 = document.querySelector('#id_password2').value;
-    if (password !== password2 ) {
-        document.querySelector('#password_error').innerHTML= "Passwords are not the same";
-        return false;
-    }
-    const params = {
-        email,
-        name,
-        password,
-    };
-
-    console.log(document.cookie);
-    axios
-    .post("/api/user/create/", 
-        params,
-        )
-    .then(function (response) {
-    console.log(response);
-    })
-    .catch(function (error) {
-        console.log(error);
-    })};
-</script> -->
+<script type="text/javascript" src={% static "js/core/signup.js" %}></script>
 {% endblock %}
 {% block content %}
 <div>
+
     <h1> Sign Up</h1>
-    {{ csrf_token }}
+    <p style="color: red;" id="email_err"></p>
     <p><label for="id_email">Email:</label> <input type="text" name="email" maxlength="255" required id="id_email"></p>
+    <p style="color: red;" id="name_err"></p>
     <p><label for="id_name">Name:</label> <input type="text" name="name" maxlength="255" required id="id_name"></p>
     <p><label for="id_password1">Password:</label> <input type="password" name="password1" required id="id_password1"></p>
-    <p style="color: red;" id="password_error"></p>
+    <p style="color: red;" id="password_err"></p>
     <p><label for="id_password2">Password confirmation:</label> <input type="password" name="password2" required id="id_password2"></p>
     <button onclick="createUser()">Submit</button>
+    <input type="hidden" id="loginUrl" login-url="{% url 'auth:login'%}?after-signup=true" />
 </div>
 {% endblock %}

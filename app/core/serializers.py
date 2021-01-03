@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
+from rest_framework import mixins, serializers
+
+from .utils import SendConfirmationEmail
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,7 +15,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create a new user with encrypted password and return it"""
-        return get_user_model().objects.create_user(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)
+        request = self.context['request']
+        SendConfirmationEmail(request, user).send_confirmation_email()
+        return user
+
 
     def update(self, instance, validated_data):
         """Update a user, setting a password correctly, and return it"""
