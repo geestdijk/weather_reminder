@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+{% load static %}
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src={% static "js/core/login.js" %}></script>
+{% endblock %}
+{% block content %}
+<div>
+    <h2> Login</h2>
+    <p style="color: red;" id="email_err"></p>
+    <p><label for="id_email">Email:</label> <input type="text" name="email" maxlength="255" required id="id_email"></p>
+    <p><label for="id_password">Password:</label> <input type="password" name="password" required id="id_password"></p>
+    <button onclick="authUser()">Submit</button>
+    <input type="hidden" id="homeUrl" home-url="{% url 'home'%}" />
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const afterSignup = urlParams.has('after-signup');
+        if (afterSignup) {
+            const loginHeading = document.querySelector('h2');
+            const message = document.createElement('p');
+            message.innerHTML = "The confirmation link was sent to your email address.";
+            loginHeading.parentNode.insertBefore(message, loginHeading);
+        }
+    </script>
+</div>
+{% endblock %}
