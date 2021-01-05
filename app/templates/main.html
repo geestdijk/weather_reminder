@@ -10,8 +10,16 @@
     </header>
     <main>
         {% block javascript %}{% endblock javascript %}
+        <a href="{% url "home" %}">Home</a> <br>
+        {% if user.is_authenticated %}
+        <a href="{% url "auth:logout" %}">Logout</a> <br>
+        {% else %}
+        <a href="{% url "auth:signup" %}">Signup</a> <br>
+        <a href="{% url "auth:login" %}">Login</a> <br>
+        {% endif %}
+
         {% block content %}
-        {% endblock %}
+        {% endblock content %}
     </main>
     <footer>
     </footer>

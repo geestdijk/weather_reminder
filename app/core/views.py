@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model, login, views as auth_views
 from django.views import View
+from django.views.generic.base import TemplateView
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.edit import FormView
 from django.utils.encoding import force_str
@@ -8,9 +9,10 @@ from django.utils.http import urlsafe_base64_decode
 
 from rest_framework import generics, permissions
 from rest_framework_simplejwt import authentication
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .forms import SignUpForm
-from .serializers import UserSerializer
+from .serializers import UserSerializer, MyTokenObtainPairSerializer
 from .utils import account_activation_token
 
 
@@ -44,7 +46,12 @@ class SignUpView(FormView):
     form_class = forms.Form
 
 
-class ConfirmEmail(View):
+class LoginView(FormView):
+    template_name = "core/login.html"
+    form_class = forms.Form
+
+
+class ConfirmEmailView(View):
     def get(self, request, uidb64, token):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -55,7 +62,14 @@ class ConfirmEmail(View):
         if user is not None and account_activation_token.check_token(user, token):
             user.is_active = True
             user.save()
-            login(request, user)
-            return redirect(reverse('admin:login'))
+            return redirect(reverse('auth:login'))
         else:
             return render(request, 'auth/account_activation_invalid.html')
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+     serializer_class = MyTokenObtainPairSerializer
+
+
+class HomeView(TemplateView):
+    template_name = "core/home.html"

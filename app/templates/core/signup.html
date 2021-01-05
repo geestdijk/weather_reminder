@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
 <div>
-
+    {% csrf_token %}
     <h1> Sign Up</h1>
     <p style="color: red;" id="email_err"></p>
     <p><label for="id_email">Email:</label> <input type="text" name="email" maxlength="255" required id="id_email"></p>

@@ -1,12 +1,13 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 from rest_framework import mixins, serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .utils import SendConfirmationEmail
 
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serizlizers for the user objects"""
+    """Serializers for the user objects"""
 
     class Meta:
         model = get_user_model()
@@ -31,3 +32,12 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
 
         return user
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        print("HERE I AM")
+        data = super().validate(attrs)
+        login(self.context['request'], self.user)
+
+        return data
