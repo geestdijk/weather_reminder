@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model, login
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import mixins, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .utils import SendConfirmationEmail
-
-
+from .tasks import confirmation_email
+from .utils import account_activation_token
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializers for the user objects"""
@@ -18,9 +20,16 @@ class UserSerializer(serializers.ModelSerializer):
         """Create a new user with encrypted password and return it"""
         user = get_user_model().objects.create_user(**validated_data)
         request = self.context['request']
-        SendConfirmationEmail(request, user).send_confirmation_email()
+        token = account_activation_token.make_token(user)
+        confirmation_email_data = {
+            'name': user.name,
+            'domain': get_current_site(request).domain,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+            'to_email': user.email
+        }
+        confirmation_email.delay(confirmation_email_data)
         return user
-
 
     def update(self, instance, validated_data):
         """Update a user, setting a password correctly, and return it"""
@@ -33,10 +42,10 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
-        print("HERE I AM")
         data = super().validate(attrs)
         login(self.context['request'], self.user)
 

@@ -5,7 +5,7 @@ from rest_framework_simplejwt import views as jwt_views
 
 from core import views as core_views
 
-from .views import ping
+from .views import ping, HelloApiView, HelloTemplateView
 
 
 auth_urlpatterns = (
@@ -30,6 +30,8 @@ user_urlpatterns = (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("ping/", ping, name="ping"),
+    path("api/hello/", HelloApiView.as_view(), name="api-hello"),
+    path("hello/", HelloTemplateView.as_view(), name="hello"),
     path("", core_views.HomeView.as_view(), name="home"),
     path("auth/", include(auth_urlpatterns)),
     path("api/user/", include(user_urlpatterns)),
@@ -37,6 +39,6 @@ urlpatterns = [
         "api/token/", core_views.MyTokenObtainPairView.as_view(), name="token_obtain_pair"
     ),
     path(
-        "api/token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token_refresh"
+        "api/token/refresh/", core_views.MyTokenRefreshView.as_view(), name="token_refresh"
     ),
 ]

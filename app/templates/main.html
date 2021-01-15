@@ -7,6 +7,9 @@
 </head>
 <body>
     <header>
+        {% load static %}
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="text/javascript" src={% static "js/inMemoryJwt.js" %}></script>
     </header>
     <main>
         {% block javascript %}{% endblock javascript %}

@@ -19,7 +19,7 @@ authUser = function() {
 	};
 	axios.post('/api/token/', data).then(
 		(response) => {
-			console.log(response);
+			inMemoryJWT.setToken(response.data);
 			const homeUrl = document
 				.querySelector('#homeUrl')
 				.getAttribute('home-url');
@@ -27,13 +27,9 @@ authUser = function() {
 		},
 		(error) => {
 			const errors = error.response.data;
-			document.querySelector('#email_err').innerHTML = getError(
+			document.querySelector('#err').innerHTML = getError(
 				errors,
 				'detail'
-			);
-			document.querySelector('#password_err').innerHTML = getError(
-				errors,
-				'password'
 			);
 		}
 	);

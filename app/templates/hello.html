@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block content %}
+
+<h2>Hello page for authenticated users only</h2>
+
+<p id="hello"></p>
+
+
+<script type="text/javascript" src={% static "js/checkAuth.js" %}></script>
+<script>
+        authHttpClient('/api/hello/').then(
+		(response) => {
+            document.querySelector('#hello').innerHTML = response.data.greetings
+		},
+		(error) => {
+			const errors = error.response.data;
+			console.log(errors);
+		}
+	);
+</script>
+{% endblock content %}

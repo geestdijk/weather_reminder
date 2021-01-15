@@ -1,13 +1,13 @@
 {% extends "main.html" %}
 {% load static %}
 {% block javascript %}
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="text/javascript" src={% static "js/core/login.js" %}></script>
+<!-- <script type="text/javascript" src={% static "js/inMemoryJwt.js" %}></script> -->
 {% endblock %}
 {% block content %}
 <div>
     <h2> Login</h2>
-    <p style="color: red;" id="email_err"></p>
+    <p style="color: red;" id="err"></p>
     <p><label for="id_email">Email:</label> <input type="text" name="email" maxlength="255" required id="id_email"></p>
     <p><label for="id_password">Password:</label> <input type="password" name="password" required id="id_password"></p>
     <button onclick="authUser()">Submit</button>
