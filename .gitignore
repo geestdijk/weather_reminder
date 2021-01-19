@@ -5,3 +5,5 @@ env
 .vscode/
 */htmlcov
 */staticfiles
+*/htmlcov
+app/logs/*

@@ -1,20 +1,21 @@
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, re_path
-from rest_framework_simplejwt import views as jwt_views
 
 from core import views as core_views
 
-from .views import ping, HelloApiView, HelloTemplateView
-
+from .views import HelloApiView, HelloTemplateView, ping
 
 auth_urlpatterns = (
     [
         path("signup/", core_views.SignUpView.as_view(), name="signup"),
         path("login/", core_views.LoginView.as_view(), name="login"),
         path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-        re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,40})/$',
-                core_views.ConfirmEmailView.as_view(), name='activate'),
+        re_path(
+            r"^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,40})/$",
+            core_views.ConfirmEmailView.as_view(),
+            name="activate",
+        ),
     ],
     "auth",
 )
@@ -36,9 +37,13 @@ urlpatterns = [
     path("auth/", include(auth_urlpatterns)),
     path("api/user/", include(user_urlpatterns)),
     path(
-        "api/token/", core_views.MyTokenObtainPairView.as_view(), name="token_obtain_pair"
+        "api/token/",
+        core_views.MyTokenObtainPairView.as_view(),
+        name="token_obtain_pair",
     ),
     path(
-        "api/token/refresh/", core_views.MyTokenRefreshView.as_view(), name="token_refresh"
+        "api/token/refresh/",
+        core_views.MyTokenRefreshView.as_view(),
+        name="token_refresh",
     ),
 ]

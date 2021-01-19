@@ -1,8 +1,13 @@
-from django.contrib.auth import get_user_model
-from rest_framework.test import APIClient
 import pytest
+from django.contrib.auth import get_user_model
+from django.http import HttpRequest
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from rest_framework.test import APIClient
 
 from core import models
+from core.utils import account_activation_token
 
 
 @pytest.fixture
@@ -40,3 +45,22 @@ def sample_city_fixture(db):
     city = models.City.objects.create(name="Sample city")
 
     return city
+
+
+@pytest.fixture
+def confirmation_email_data(active_user_fixture):
+    user = active_user_fixture
+    request = HttpRequest()
+    request.META = {
+        "SERVER_NAME": "localhost",
+        "SERVER_PORT": "8000",
+    }
+    confirmation_email_data = {
+        "name": user.name,
+        "domain": get_current_site(request).domain,
+        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+        "token": account_activation_token.make_token(user),
+        "to_email": user.email,
+    }
+    return confirmation_email_data
+    

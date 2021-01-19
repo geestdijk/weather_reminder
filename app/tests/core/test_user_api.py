@@ -1,8 +1,9 @@
+import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-import pytest
-from rest_framework import status
 
+from rest_framework import status
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 CREATE_USER_URL = reverse("user:create")
 ME_URL = reverse("user:me")
@@ -51,8 +52,18 @@ class TestPublicUserAPI:
         }
         res = client.post(TOKEN_PAIR_URL, payload)
         assert res.status_code == status.HTTP_200_OK
-        assert "access" in res.data
-        assert "refresh" in res.data
+        assert "accessToken" in res.json()
+        assert "refresh-token" in client.cookies
+
+    def test_create_jwt_token_pair_for_user_wrong_password(self, client, active_user_fixture):
+        """Test that wrong password raises Error"""
+        payload = {
+            "email": "active_user_email@example.com",
+            "password": "wrong_password",
+        }
+        res = client.post(TOKEN_PAIR_URL, payload)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+        assert res.data['detail'] == 'No active account found with the given credentials'
 
     def test_obtain_new_access_token_using_refresh_token(
         self, client, active_user_fixture
@@ -63,11 +74,19 @@ class TestPublicUserAPI:
             "password": "active_user_password",
         }
         res = client.post(TOKEN_PAIR_URL, payload)
-        refresh_token = res.data["refresh"]
-        payload = {"refresh": refresh_token}
-        res = client.post(REFRESH_TOKEN_URL, payload)
+        refresh_token = client.cookies["refresh-token"].value
+        res = client.post(REFRESH_TOKEN_URL, {})
         assert res.status_code == status.HTTP_200_OK
-        assert "access" in res.data
+        assert "accessToken" in res.json()
+
+    def test_obtain_new_access_token_using_wrong_refresh_token(
+        self, client
+    ):
+        """Test failure obtaining new access token using wrong refresh token"""
+        client.cookies["refresh-token"] = "wrong_refresh_token"
+        res = client.post(REFRESH_TOKEN_URL, {})
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+        assert res.data['detail'] == 'Token is invalid or expired'
 
 
 class TestPrivateUserAPI:

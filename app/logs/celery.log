@@ -1,9 +1,0 @@
-[2021-01-15 14:04:45,684: INFO/MainProcess] Connected to redis://redis:6379/0
-[2021-01-15 14:04:45,818: INFO/MainProcess] mingle: searching for neighbors
-[2021-01-15 14:04:46,847: INFO/MainProcess] mingle: all alone
-[2021-01-15 14:04:46,924: WARNING/MainProcess] /usr/local/lib/python3.8/site-packages/celery/fixups/django.py:205: UserWarning: Using settings.DEBUG leads to a memory
-            leak, never use this setting in production environments!
-  warnings.warn('''Using settings.DEBUG leads to a memory
-[2021-01-15 14:04:46,925: INFO/MainProcess] celery@21c0e9cf9a90 ready.
-[2021-01-15 14:24:45,642: INFO/MainProcess] Received task: core.tasks.confirmation_email[f5a2be23-aa44-4d2d-9e8e-14f1cd7a8cf1]  
-[2021-01-15 14:24:57,770: INFO/ForkPoolWorker-1] Task core.tasks.confirmation_email[f5a2be23-aa44-4d2d-9e8e-14f1cd7a8cf1] succeeded in 12.008309324000038s: None
