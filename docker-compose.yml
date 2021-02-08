@@ -21,6 +21,8 @@ services:
       - POSTGRES_USER=weather
       - POSTGRES_PASSWORD=weather
       - POSTGRES_DB=weather_dev
+    ports:
+      - 5433:5432
 
   celery:
     build: ./app
@@ -30,9 +32,18 @@ services:
     env_file:
       - ./app/.env.dev
     depends_on:
-      - weather
       - redis
   
+  celery-beat:
+    build: ./app
+    command: celery beat --app=weather_reminder --loglevel=info --logfile=logs/celery_beat.log
+    volumes:
+      - ./app:/usr/src/app
+    env_file:
+      - ./app/.env.dev
+    depends_on:
+      - redis
+
   redis:
     image: redis:5-alpine
 

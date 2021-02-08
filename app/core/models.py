@@ -44,9 +44,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 class City(models.Model):
     """City object"""
 
-    name = models.CharField(max_length=255)
-    forecast = models.JSONField(default=list)
+    name = models.CharField(max_length=255, unique=True)
+    forecast = models.JSONField(default=list, blank=True, null=True)
     members = models.ManyToManyField(User, through="UserForecast")
+    lat = models.DecimalField(max_digits=6, decimal_places=4, blank=True, null=True)
+    long = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
 
     def __str__(self):
         return self.name

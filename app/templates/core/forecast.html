@@ -1,0 +1,87 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %} Forecast {% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="container" id="cities-forecast">
+        <div class="d-flex">
+            <select class="form-select me-1" id="select-city-to-add" aria-label="Default select example">
+			<option selected>Choose a city</option>
+			{% if object_list %}
+				{% for city_name in object_list %}
+				<option id="select-{city_name}" value="{{city_name}}">{{city_name}}</option>
+				{% endfor %}
+				</select>
+			{% endif %}
+            <button onclick="addCityToUser()" class="btn btn-primary">Add</button>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="userForecastUrl" forecast-url="{% url 'user:my_forecast_api'%}"/>
+<script>
+  const userForecastUrl = document
+  .querySelector('#userForecastUrl')
+  .getAttribute('forecast-url');
+</script>
+
+<script type="text/javascript" src={% static "js/checkAuth.js" %}></script>
+<script type="text/javascript" src={% static "js/myForecast.js" %}></script>
+<script>getUserWeather(userForecastUrl)</script>
+<script>
+const addCityToUser = () => {
+	const cityName = document.querySelector('#select-city-to-add').value;
+	if (cityName === "Choose a city") {
+		return false;
+	};
+	authHttpClient(`/api/user/forecast/${cityName}/`, 'post').then(
+		(response) => {
+			forecastDiv = document.querySelector('#cities-forecast');
+			forecastDiv.insertAdjacentHTML(
+				'beforeend',
+				`<div id="${(cityName).replace(/\s/g, '')}-div" class="mt-3">
+					<h4>
+						${cityName}  
+						<button type="button" 
+						onclick="removeCityFromUser('${cityName}')" 
+						class="btn btn-outline-danger btn-sm float-end">Remove
+						</button>
+					</h4>
+					<div class="card-group mt-2" id="forecast-${(cityName).replace(/\s/g, '')}">
+					</div>
+				</div>`);
+			var select = document.querySelector('#select-city-to-add');
+			select.selectedIndex = 0;
+			select.removeChild(select.querySelector(`option[value="${cityName}"]`));
+			;
+			addFourDaysDailyWeatherCards(
+				cityName,
+				response.data.city.forecast.daily
+			);
+		},
+		(error) => {
+			const errors = error.response.data;
+			console.log(errors);
+		}
+	);
+};
+const removeCityFromUser = (cityName) => {
+	authHttpClient(`/api/user/forecast/${cityName}/`, "delete").then(
+		(response) => {
+			let elem = document.querySelector(`#${cityName.replace(/\s/g, '')}-div`); 
+			elem.parentNode.removeChild(elem);
+			let select = document.querySelector('#select-city-to-add');
+			select.insertAdjacentHTML(
+			'beforeend',
+			`<option id="select-${cityName}" value="${cityName}">${cityName}</option>`
+			);
+		},
+		(error) => {
+			const errors = error.response.data;
+			console.log(errors);
+		}
+	);
+};
+</script>
+
+{% endblock content %}

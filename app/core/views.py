@@ -3,11 +3,13 @@ from datetime import datetime
 from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render, reverse
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
+from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from rest_framework import generics, permissions, status
@@ -19,8 +21,15 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .serializers import MyTokenObtainPairSerializer, UserSerializer
-from .utils import account_activation_token
+
+from .models import City, UserForecast
+from .serializers import (
+    MyTokenObtainPairSerializer,
+    UserForecastListSerializer,
+    UserForecastSerializer,
+    UserSerializer,
+)
+from .utils.email_confirmation import account_activation_token
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -118,3 +127,46 @@ class MyTokenRefreshView(TokenRefreshView):
 
 class HomeView(TemplateView):
     template_name = "core/home.html"
+
+
+class UserForecastListApiView(generics.ListAPIView):
+    """User's forecasts view"""
+    serializer_class = UserForecastListSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def get_queryset(self):
+        """
+        Returns a list of user's cities with corresponding forecasts
+        """
+        user = self.request.user
+        return UserForecast.objects.filter(user=user)
+
+
+class UserForecastAPIView(generics.CreateAPIView):
+    serializer_class = UserForecastSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def delete(self, request, city_name, format=None):
+        """Deletes a current user's forecast by city name"""
+        user = self.request.user
+        city = City.objects.get(name=city_name)
+        try:
+            user_forecast = UserForecast.objects.get(user=user, city=city)
+        except UserForecast.DoesNotExist:
+            raise Http404("No UserForecast matches the given query.")
+        user_forecast.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ForecastView(LoginRequiredMixin, ListView):
+    model = UserForecast
+    template_name = 'core/forecast.html'
+
+    def get_queryset(self):
+        user = self.request.user
+        user_cities_names = UserForecast.objects.filter(user=user)\
+            .prefetch_related("city")\
+            .values_list("city__name", flat=True)
+        cities_to_choose_from = City.objects.values_list('name', flat=True)\
+            .exclude(name__in=user_cities_names)
+        return cities_to_choose_from

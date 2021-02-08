@@ -7,7 +7,7 @@ from django.utils.http import urlsafe_base64_encode
 from rest_framework.test import APIClient
 
 from core import models
-from core.utils import account_activation_token
+from core.utils.email_confirmation import account_activation_token
 
 
 @pytest.fixture
@@ -63,4 +63,3 @@ def confirmation_email_data(active_user_fixture):
         "to_email": user.email,
     }
     return confirmation_email_data
-    

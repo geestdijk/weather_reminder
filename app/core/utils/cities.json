@@ -1,0 +1,137 @@
+[
+    {
+        "model": "core.city",
+        "pk": 1,
+        "fields": {
+            "name": "Kyiv",
+            "lat": 50.4501,
+            "long": 30.5234
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 2,
+        "fields": {
+            "name": "Kharkiv",
+            "lat": 49.9935,
+            "long": 36.2304
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 3,
+        "fields": {
+            "name": "Odesa",
+            "lat": 46.4825,
+            "long": 30.7233
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 4,
+        "fields": {
+            "name": "Dnipro",
+            "lat": 48.4647,
+            "long": 35.0462
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 5,
+        "fields": {
+            "name": "Zaporizhzhia",
+            "lat": 47.8388,
+            "long": 35.1396
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 6,
+        "fields": {
+            "name": "Lviv",
+            "lat": 49.8397,
+            "long": 24.0297
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 7,
+        "fields": {
+            "name": "Chernivtsi",
+            "lat": 48.2921,
+            "long": 25.9358
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 8,
+        "fields": {
+            "name": "Kryvyi Rih",
+            "lat": 47.9105,
+            "long": 33.3918
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 9,
+        "fields": {
+            "name": "Cherkasy",
+            "lat": 49.4444,
+            "long": 32.0598
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 10,
+        "fields": {
+            "name": "Mykolaiv",
+            "lat": 46.9750,
+            "long": 31.9946
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 11,
+        "fields": {
+            "name": "Mariupol",
+            "lat": 47.0971,
+            "long": 37.5434
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 12,
+        "fields": {
+            "name": "Vinnytsia",
+            "lat": 49.2331,
+            "long": 28.4682
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 13,
+        "fields": {
+            "name": "Kherson",
+            "lat": 46.6354,
+            "long": 32.6169
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 14,
+        "fields": {
+            "name": "Poltava",
+            "lat": 49.5883,
+            "long": 34.5514
+        }
+    },
+    {
+        "model": "core.city",
+        "pk": 15,
+        "fields": {
+            "name": "Chernihiv",
+            "lat": 51.4982,
+            "long": 31.2893
+        }
+    }
+]

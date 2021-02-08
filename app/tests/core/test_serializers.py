@@ -2,7 +2,6 @@ import pytest
 
 from core.serializers import UserSerializer
 
-
 pytestmark = pytest.mark.django_db
 
 

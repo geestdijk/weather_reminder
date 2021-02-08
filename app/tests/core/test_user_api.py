@@ -1,9 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-
 from rest_framework import status
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+
 
 CREATE_USER_URL = reverse("user:create")
 ME_URL = reverse("user:me")
@@ -74,7 +73,7 @@ class TestPublicUserAPI:
             "password": "active_user_password",
         }
         res = client.post(TOKEN_PAIR_URL, payload)
-        refresh_token = client.cookies["refresh-token"].value
+        # refresh_token = client.cookies["refresh-token"].value
         res = client.post(REFRESH_TOKEN_URL, {})
         assert res.status_code == status.HTTP_200_OK
         assert "accessToken" in res.json()

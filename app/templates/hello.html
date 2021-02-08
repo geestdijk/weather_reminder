@@ -10,7 +10,7 @@
 
 <script type="text/javascript" src={% static "js/checkAuth.js" %}></script>
 <script>
-        authHttpClient('/api/hello/').then(
+        authHttpClient('/api/hello/', "get".then(
 		(response) => {
             document.querySelector('#hello').innerHTML = response.data.greetings
 		},

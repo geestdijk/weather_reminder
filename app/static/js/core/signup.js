@@ -24,14 +24,15 @@ createUser = function() {
 		name,
 		password
 	};
-	axios.post('/api/user/create/', data).then(
-		(response) => {
+	axios
+		.post('/api/user/create/', data)
+		.then((response) => {
 			const loginUrl = document
 				.querySelector('#loginUrl')
 				.getAttribute('login-url');
 			document.location.href = loginUrl;
-		},
-		(error) => {
+		})
+		.catch((error) => {
 			const errors = error.response.data;
 			document.querySelector('#email_err').innerHTML = getError(
 				errors,
@@ -45,6 +46,5 @@ createUser = function() {
 				errors,
 				'password'
 			);
-		}
-	);
+		});
 };

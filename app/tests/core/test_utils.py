@@ -1,5 +1,5 @@
 # import pytest
-# from core.utils import send_confirmation_email
+# from core.utils.email_confirmation import send_confirmation_email
 # from django.template.loader import render_to_string
 # from pytest_django.asserts import assertTemplateUsed
 

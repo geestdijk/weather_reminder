@@ -1,5 +1,6 @@
 __pycache__
 env
+app/.env.dev
 *.coverage
 *.sqlite3
 .vscode/

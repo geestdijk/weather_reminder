@@ -1,0 +1,35 @@
+<html>
+
+{% for city, city_dates in cities.items %}
+    <h2>{{ city|escape }}</h2>
+    <table style="width: 100%; 
+        border: 1px solid black;
+        border-collapse: collapse;">
+        <tr style="border: 1px solid black;
+            border-collapse: collapse;">
+            <th style="border: 1px solid black;
+            border-collapse: collapse;">Date</th>
+            <th style="border: 1px solid black;
+            border-collapse: collapse;">Min. temp</th>
+            <th style="border: 1px solid black;
+            border-collapse: collapse;">Max. temp</th>
+            <th style="border: 1px solid black;
+            border-collapse: collapse;">Wind speed</th>
+        </tr>
+        {% for date, weather in city_dates.items %}
+            <tr style="border: 1px solid black;
+            border-collapse: collapse;">
+                <td style="border: 1px solid black;
+                border-collapse: collapse; text-align: center;"> {{ date }} </td>
+                <td style="border: 1px solid black;
+                border-collapse: collapse; text-align: center;">{{ weather.min_temp }} &#8451;</td>
+                <td style="border: 1px solid black;
+                border-collapse: collapse; text-align: center;">{{ weather.max_temp }} &#8451;</td>
+                <td style="border: 1px solid black;
+                border-collapse: collapse; text-align: center;">{{ weather.wind_speed }} m/s</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+{% endfor %}
+</html>

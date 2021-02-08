@@ -1,6 +1,55 @@
 {% extends "main.html" %}
+{% load static %}
+{% block title %}Home{% endblock title %}
 
 {% block content %}
-User : {{ user.email }} <br>
-Is authenticated? {{ user.is_authenticated }}
+<div class="container-fluid">
+    <div class="container">
+        <p>User : {{ user.email }}</p>
+        <p>Is authenticated? {{ user.is_authenticated }}</p> 
+    </div>
+    {% if user.is_authenticated %}
+        <div class="container" id="subscription-div">
+            <p id="message">Daily weather updates at your email</p>
+        </div>
+    {% endif %}
+</div>
+<script type="text/javascript" src={% static "js/checkAuth.js" %}></script>
+<script type="text/javascript" src={% static "js/setups/checkSubscription.js" %}></script>
+<script>
+    const getSubscriptionData = () => {
+        authHttpClient('/api/setups/exists/', "get").then(
+            (response) => {
+                return renderSubscriptionData(response.data);
+            },
+            (error) => {
+                console.log(error.response.data);
+            }
+        ).then(
+
+        )
+    };
+    const removeSubscription = (time) => {
+        authHttpClient(`/api/setups/${time}/`, "delete").then(
+            (response) => {
+                renderSubscriptionData({"exists": false});
+            },
+            (error) => {
+                console.log(error.response.data);
+            }
+        );
+    };
+    const subscribeForWeatherUpdates = () => {
+        const time = document.querySelector('#select-hour').value;
+        authHttpClient(`/api/setups/${time}/`, "post").then(
+            (response) => {
+                renderSubscriptionData(getSubscriptionData());
+            },
+            (error) => {
+                console.log(error.response.data);
+            }
+        );
+    };
+    getSubscriptionData();
+</script>
 {% endblock content %}

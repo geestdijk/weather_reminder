@@ -1,5 +1,3 @@
-import pytest
-
 from core.forms import SignUpForm
 
 

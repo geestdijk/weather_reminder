@@ -1,13 +1,12 @@
-from unittest import mock
-
 import pytest
+
 from django.template.loader import render_to_string
 from pytest_django.asserts import assertTemplateUsed
 
 from core.tasks import confirmation_email
 
 
-
+@pytest.mark.django_db
 def test_confirmation_email_task(confirmation_email_data,
                                  celery_session_worker,
                                  mailoutbox):
